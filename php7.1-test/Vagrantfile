@@ -1,0 +1,27 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+$bash = <<BASH
+  apt-get update && apt-get -y upgrade
+  apt-get install -y language-pack-en apache2 samba samba-common-bin php7.1 php7.1-pdo \
+    php7.1-mysql php7.1-tokenizer php7.1-mcrypt php7.1-mbstring php7.1-openssl php7.1-xml \
+    php7.1-bcmath nodejs npm mysql-server
+  npm install -g gulp-cli
+  npm install -g bower
+BASH
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/xenial32"
+  config.vm.network "private_network", ip: "69.0.0.69"
+  # HTTP
+  config.vm.network "forwarded_port", guest: 80, host: 80
+  # MySQL
+  config.vm.network "forwarded_port", guest: 3306, host: 3306
+  # prevent collision
+  config.vm.network "forwarded_port", guest: 22, host: 56789, id: 'ssh'
+  config.vm.provider "virtualbox" do |vb|
+    vb.gui = false
+    vb.memory = "1024"
+  end
+  config.vm.provision "shell", inline: $bash
+end
