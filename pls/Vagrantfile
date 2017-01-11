@@ -1,29 +1,33 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# I use this for Laravel development on PHP 5.6
+
 $bash = <<BASH
   add-apt-repository ppa:ondrej/php
-  apt-get update && apt-get -y upgrade
+  apt-get -y update && apt-get -y upgrade
   apt-get install -y language-pack-en apache2 samba samba-common-bin php5.6 \
   php5.6-pdo php5.6-mysql php5.6-tokenizer php5.6-mcrypt php5.6-mbstring \
-  php5.6-openssl php5.6-xml php5.6-bcmath nodejs npm mysql-server php5.6-curl
+  php5.6-xml php5.6-bcmath nodejs npm mysql-server php5.6-curl
+  adduser --no-create-home --disabled-password --disabled-login neilbryson
+  a2enmod rewrite
+  service apache2 restart
   npm install -g gulp-cli
   npm install -g bower
 BASH
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu/xenial32"
+  config.vm.box = "ubuntu/trusty64"
   config.vm.network "private_network", ip: "69.96.69.96"
   # HTTP
-  config.vm.network "forwarded_port", guest: 80, host: 49089
+  config.vm.network "forwarded_port", guest: 80, host: 65432
   # MySQL
-  config.vm.network "forwarded_port", guest: 3306, host: 49090
+  config.vm.network "forwarded_port", guest: 3306, host: 39039
   # prevent collision
-  config.vm.network "forwarded_port", guest: 22, host: 60069, id: 'ssh'
+  config.vm.network "forwarded_port", guest: 22, host: 55555, id: 'ssh'
   config.vm.provider "virtualbox" do |vb|
     vb.gui = false
     vb.memory = "1024"
   end
-  config.ssh.password = 'Password123!'
   config.vm.provision "shell", inline: $bash
 end
