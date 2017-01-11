@@ -9,6 +9,7 @@ $bash = <<BASH
   apt-get install -y language-pack-en apache2 samba samba-common-bin php5.6 \
   php5.6-pdo php5.6-mysql php5.6-tokenizer php5.6-mcrypt php5.6-mbstring \
   php5.6-xml php5.6-bcmath nodejs npm mysql-server php5.6-curl
+  apt-get install -y mysql-server-5.6
   adduser --no-create-home --disabled-password --disabled-login neilbryson
   a2enmod rewrite
   service apache2 restart
